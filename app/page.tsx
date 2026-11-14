@@ -350,7 +350,7 @@ export default function Home() {
             <div id="intro">
               <div className="wrap hero">
                 <div className="logo-tile">
-                  <span style={{ fontSize: 56, fontWeight: 600, color: "#781040" }}>T</span>
+                  <img src="/logo.png" alt="Tishk International University logo" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
                 </div>
                 <p className="meta eyebrow">Student Experience Survey 2026</p>
                 <h1 className="display">Your voice shapes what TIU does next.</h1>
