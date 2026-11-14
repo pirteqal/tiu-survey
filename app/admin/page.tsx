@@ -173,13 +173,21 @@ export default function AdminPage() {
 
   // ---- Chart drawing ----
   useEffect(() => {
-    if (!session || typeof window === "undefined") return;
+    if (!session) return;
+    let cancelled = false;
 
-    const draw = () => {
-      if (!canvasRef.current || !(window as unknown as { Chart?: unknown }).Chart) return;
-      const Chart = (window as unknown as { Chart: new (el: HTMLCanvasElement, cfg: unknown) => { destroy: () => void } }).Chart;
+    const draw = async () => {
+      if (!canvasRef.current) return;
 
-      if (chartRef.current) (chartRef.current as { destroy: () => void }).destroy();
+      // Dynamic import: Chart.js only loads in the browser, no CDN needed
+      const { default: Chart } = await import("chart.js/auto");
+
+      if (cancelled || !canvasRef.current) return;
+
+      if (chartRef.current) {
+        (chartRef.current as { destroy: () => void }).destroy();
+        chartRef.current = null;
+      }
 
       const cs = getComputedStyle(document.documentElement);
       const cv = (k: string) => cs.getPropertyValue("--color-" + k).trim();
@@ -193,6 +201,8 @@ export default function AdminPage() {
         return t.toLocaleDateString("en-US", { month: "short", day: "numeric" });
       });
 
+      const maxData = Math.max(...chartData, 1);
+
       chartRef.current = new Chart(canvasRef.current, {
         type: "line",
         data: {
@@ -204,7 +214,7 @@ export default function AdminPage() {
             backgroundColor: "rgba(120,16,64,.08)",
             fill: true,
             pointRadius: 0,
-            pointHoverRadius: 3,
+            pointHoverRadius: 4,
             tension: 0.3,
           }],
         },
@@ -228,22 +238,21 @@ export default function AdminPage() {
           },
           scales: {
             x: { grid: { display: false }, border: { color: border }, ticks: { color: textSecondary, font: { size: 12 }, maxTicksLimit: 6, maxRotation: 0 } },
-            y: { beginAtZero: true, grid: { display: false }, border: { display: false }, ticks: { color: textSecondary, font: { size: 12 }, maxTicksLimit: 4 } },
+            y: {
+              beginAtZero: true,
+              suggestedMax: Math.max(maxData, 5),
+              grid: { display: false },
+              border: { display: false },
+              ticks: { color: textSecondary, font: { size: 12 }, maxTicksLimit: 4, precision: 0 },
+            },
           },
         },
       });
     };
 
-    if ((window as unknown as { Chart?: unknown }).Chart) {
-      draw();
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js";
-    script.onload = draw;
-    document.head.appendChild(script);
+    draw();
+    return () => { cancelled = true; };
   }, [session, chartData]);
-
   // ---- CSV export ----
   const handleExport = () => {
     if (responses.length === 0) return;
