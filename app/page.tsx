@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 const Q: [string, string[]][] = [
   ["Which faculty are you in?", ["Engineering", "Dentistry", "Pharmacy", "Nursing", "Applied Science", "Law", "Education", "Administrative Science", "Economics"]],
-  ["Which grade are you in?", ["Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"]],
+  ["Which grade are you in?", ["1", "2", "3", "4", "5"]],
   ["How would you rate your overall experience at the university?", ["Excellent", "Good", "Fair", "Poor"]],
   ["How effective are your instructors at helping you learn?", ["Very effective", "Mostly effective", "Somewhat effective", "Not effective"]],
   ["How satisfied are you with the quality and availability of the university's student resting areas?", ["Very satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very dissatisfied"]],
