@@ -233,8 +233,7 @@ export default function AdminPage() {
               borderWidth: 1,
               cornerRadius: 6,
               padding: 8,
-              callbacks: { label: (c: { parsed: { y: number } }) => c.parsed.y + " responses" },
-            },
+              callbacks: { label: (c: { parsed: { y: number | null } }) => (c.parsed.y ?? 0) + " responses" },            },
           },
           scales: {
             x: { grid: { display: false }, border: { color: border }, ticks: { color: textSecondary, font: { size: 12 }, maxTicksLimit: 6, maxRotation: 0 } },
