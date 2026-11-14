@@ -373,7 +373,7 @@ export default function Home() {
             </div>
             <footer>
               <div className="wrap">
-                <span>© 2026 Tishk International University</span>
+                <span>© 2026 Tishk International University · Project developed by Rahwan, Department of Civil Engineering</span>
                 <a href="#" className="hit">Privacy</a>
               </div>
             </footer>
